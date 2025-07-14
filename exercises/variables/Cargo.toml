@@ -1,0 +1,7 @@
+[package]
+name = "variables"
+version = "1.0.0"
+authors = ["NN Y2K0 <mail@world.com>"]
+edition = "2024"
+
+[dependencies]
