@@ -1,3 +1,8 @@
+mod models;
+mod utils;
+
+// or if there is a nested folder, lets say models, mod models and then use as `use models::category::{CategoryId}`
+
 use std::io;
 // to gerneate guid cargo add uuid --features v4
 use uuid::Uuid;
@@ -7,69 +12,9 @@ use chrono::{DateTime, Utc};
 use std::collections::HashMap;
 use std::io::Write;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-struct CategoryId(u32);
-
-#[derive(Debug, Clone)]
-struct Category {
-    id: CategoryId,
-    name: String,
-}
-
-/*
-Debug → print with {:?}
-Clone → item.clone()
-Copy → implicit copying for small types
-PartialEq / Eq → == and !=
-Hash → use as a HashMap key
-Default → InventoryItem::default()
- */
-
-#[derive(Debug)] // Provides implementation
-struct InventoryItem {
-    id: Uuid,
-    name: String,
-    quantity: u32,
-    price: f64,
-    category_id: CategoryId,
-    date_created: DateTime<Utc>,
-}
-
-impl InventoryItem {
-    fn create(name: String, quantity: u32, price: f64, category_id: CategoryId) -> Self {
-        // Use instead of new to avoid confusion with the Default trait
-        Self {
-            id: Uuid::new_v4(),
-            name,
-            quantity,
-            price,
-            category_id,
-            date_created: Utc::now(),
-        }
-    }
-
-    pub fn update_price(&mut self, new_price: f64) {
-        self.price = new_price;
-    }
-
-    pub fn update_quantity(&mut self, new_quantity: u32) {
-        self.quantity = new_quantity;
-    }
-
-    pub fn print(&self) {
-        // Read-only
-        println!("==============================");
-        println!("Inventory Item");
-        println!("==============================");
-        println!("ID        : {}", self.id);
-        println!("Name      : {}", self.name);
-        println!("Quantity  : {}", self.quantity);
-        println!("Price     : {:.2} €", self.price);
-        println!("Category  : {:?}", self.category_id);
-        println!("Created   : {}", self.date_created);
-        println!("==============================");
-    }
-}
+use models::category::{Category, CategoryId};
+use models::inventory_item::InventoryItem;
+use utils::input::{pause, read_f64, read_string, read_u32};
 
 fn list_categories(categories: &[Category]) {
     // or categories: &Vec<Category>
@@ -223,65 +168,6 @@ fn print_main_menu() {
     println!("6. Remove product");
     println!("0. Exit");
     println!("======================================");
-}
-
-fn read_u32(message: &str) -> u32 {
-    loop {
-        print!("{message}");
-        io::stdout().flush().expect("Failed to flush stdout");
-
-        let mut input = String::new();
-
-        if io::stdin().read_line(&mut input).is_err() {
-            println!("Failed to read input.");
-            continue;
-        }
-
-        match input.trim().parse::<u32>() {
-            Ok(value) => return value,
-            Err(_) => println!("Please enter a valid number."),
-        }
-    }
-}
-
-fn read_string(prompt: &str) -> String {
-    loop {
-        print!("{prompt}");
-        io::stdout().flush().expect("Failed to flush stdout");
-
-        let mut input = String::new();
-
-        io::stdin()
-            .read_line(&mut input)
-            .expect("Failed to read input");
-
-        let input = input.trim();
-
-        if !input.is_empty() {
-            return input.to_string();
-        }
-
-        println!("Input cannot be empty.\n");
-    }
-}
-
-fn read_f64(prompt: &str) -> f64 {
-    loop {
-        let input = read_string(prompt);
-
-        match input.replace(',', ".").parse::<f64>() {
-            Ok(value) if value >= 0.0 => return value,
-            Ok(_) => println!("Value cannot be negative.\n"),
-            Err(_) => println!("Please enter a valid number.\n"),
-        }
-    }
-}
-
-fn pause() {
-    println!("\nPress Enter to continue...");
-
-    let mut input = String::new();
-    let _ = io::stdin().read_line(&mut input);
 }
 
 fn update_product_menu(products: &mut [InventoryItem]) {
