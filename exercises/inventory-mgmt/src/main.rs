@@ -62,12 +62,12 @@ fn list_products(
     }
 
     println!();
-    println!("{:-<80}", "");
+    println!("{:-<120}", "");
     println!(
-        "{:<36} {:<20} {:>8} {:>10} {:<15}",
-        "ID", "Name", "Qty", "Price", "Category"
+        "{:<36} {:<20} {:>8} {:>10} {:<15} {:<20}",
+        "ID", "Name", "Qty", "Price", "Category", "Created"
     );
-    println!("{:-<80}", "");
+    println!("{:-<120}", "");
 
     for product in products
         .iter()
@@ -79,12 +79,17 @@ fn list_products(
             .unwrap_or("Unknown");
 
         println!(
-            "{:<36} {:<20} {:>8} {:>10.2} {:<15}",
-            product.id, product.name, product.quantity, product.price, category_name,
+            "{:<36} {:<20} {:>8} {:>10.2} {:<15} {:<20}",
+            product.id(),
+            product.name(),
+            product.quantity(),
+            product.price(),
+            category_name,
+            product.date_created().format("%Y-%m-%d %H:%M:%S"),
         );
     }
 
-    println!("{:-<80}", "");
+    println!("{:-<120}", "");
 }
 
 fn list_products_by_category(

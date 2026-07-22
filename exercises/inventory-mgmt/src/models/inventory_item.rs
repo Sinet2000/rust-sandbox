@@ -14,12 +14,12 @@ Default → InventoryItem::default()
 
 #[derive(Debug, Clone)] // Provides implementation
 pub struct InventoryItem {
-    pub id: Uuid,
-    pub name: String,
-    pub quantity: u32,
-    pub price: f64,
+    id: Uuid,
+    name: String,
+    quantity: u32,
+    price: f64,
     pub category_id: CategoryId,
-    pub date_created: DateTime<Utc>,
+    date_created: DateTime<Utc>,
 }
 
 impl InventoryItem {
@@ -33,6 +33,26 @@ impl InventoryItem {
             category_id,
             date_created: Utc::now(),
         }
+    }
+
+    pub fn id(&self) -> Uuid {
+        self.id
+    }
+
+    pub fn date_created(&self) -> DateTime<Utc> {
+        self.date_created
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn quantity(&self) -> u32 {
+        self.quantity
+    }
+
+    pub fn price(&self) -> f64 {
+        self.price
     }
 
     pub fn update_price(&mut self, new_price: f64) {
