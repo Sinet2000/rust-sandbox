@@ -18,4 +18,8 @@ fn main() {
     missiles -= ready;
     println!("{} missiles left", missiles);
     println!("Total fired: {}", fired);
+
+    let price: f64 = 23.99;
+    let is_available: bool = true;
+    println!("{} is available for ${}", is_available, price);
 }
